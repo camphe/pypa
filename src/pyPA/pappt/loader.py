@@ -69,7 +69,7 @@ def camxshapemaker(iprfile, hpfile = None, kvfile = None, outpath = 'shape.nc', 
 
 def LoadPAQAFromYAML(yamlfile): 
     # Step 0: load YAML file as job, which is an attribute dictionary
-    job = AttrDict(yaml.load(file(yamlfile)))
+    job = AttrDict(yaml.safe_load(file(yamlfile)))
     
     AddDefaults(job)
 
@@ -89,15 +89,15 @@ def LoadPAQAFromYAML(yamlfile):
 
 def LoadPyPAFromYAML(yamlfile):
     # Step 0: load YAML file as job, which is an attribute dictionary
-    job = yaml.load(file(yamlfile))
+    job = yaml.safe_load(file(yamlfile))
     ext_mrg(job)
     
 
 def AddDefaults(job):
     try:
-        defaults = AttrDict(yaml.load(file(os.path.join(os.path.dirname(__file__), 'defaults', '_'.join([job.model.lower(), job.mechanism.lower()]) + '.yaml'), 'r')))
+        defaults = AttrDict(yaml.safe_load(file(os.path.join(os.path.dirname(__file__), 'defaults', '_'.join([job.model.lower(), job.mechanism.lower()]) + '.yaml'), 'r')))
     except IOError:
-        defaults = AttrDict(yaml.load(file(os.path.join(os.path.dirname(__file__), 'defaults', job.model.lower() + '.yaml'), 'r')))
+        defaults = AttrDict(yaml.safe_load(file(os.path.join(os.path.dirname(__file__), 'defaults', job.model.lower() + '.yaml'), 'r')))
     except:
         defaults = {}
     for k in defaults:
