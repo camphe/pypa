@@ -18,13 +18,13 @@ def combine(paths):
         setattr(outputfile, k, getattr(temp_file, k))
 
     for key, temp_var in temp_file.variables.iteritems():
-        print "Adding", key
+        print("Adding", key)
         new_var = outputfile.createVariable(key, temp_var.dtype.char, temp_var.dimensions, contiguous = True)
         for k in temp_var.ncattrs():
             setattr(new_var, k, getattr(temp_var, k))
     
-        print "Populating", key
-        if 'TSTEP_STAG' in temp_var.dimensions:
+        print("Populating", key)
+        if ('TSTEP_STAG' in temp_var.dimensions):
             new_var[:] = np.concatenate([f.variables[key][:-1] for f in files] + [files[-1].variables[key][-1:]], axis = 0)
         else:
             new_var[:] = np.concatenate([f.variables[key][:] for f in files], axis = 0)
