@@ -3,7 +3,7 @@ from warnings import warn
 from os.path import exists
 import re
 
-from yaml import load
+from yaml import safe_load
 
 from PseudoNetCDF.MetaNetCDF import file_master
 from PseudoNetCDF import PseudoNetCDFVariable
@@ -130,7 +130,7 @@ def ext_mrg(input):
     try:
         shape = eval(shape_name, locals(), pa_master.variables)[:]
     except:
-        raise UserWarning, '%s is not valid in your files as processed by the metawrapper' % shape_name
+        raise UserWarning('%s is not valid in your files as processed by the metawrapper' % shape_name)
 
     if input.has_key('ascii_mask'):
         ascii_mask = input['ascii_mask']
@@ -142,9 +142,8 @@ def ext_mrg(input):
             shape = shape * ascii_mask
             
         else:
-            print >> file(ascii_mask, 'w'), '\n'.join([' '.join(['1']*shape.shape[3])]*shape.shape[2])
-            raise ValueError, """File %s was not found; instead, a template was created.
-    Edit the template to include only those cells of interest"""
+            print(file(ascii_mask, 'w'), '\n'.join([' '.join(['1']*shape.shape[3])]*shape.shape[2]))
+            raise ValueError("File %s was not found; instead, a template was created. Edit the template to include only those cells of interest")
 
 
     def reduce_space(var):
@@ -371,7 +370,7 @@ def ext_mrg(input):
     return outputfile
 
 if __name__ == '__main__':
-    input = load("""
+    input = safe_load("""
 outfile: test.mrg.nc
 metawrapper: cmaq_pa_master
 files:
